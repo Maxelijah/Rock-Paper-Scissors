@@ -1,106 +1,96 @@
-console.log("hello")
-
-/* 
-play the game 5 times and declare the winner at the end 
-Secondly I want to make the score continous each time
-
-*/
-let humanScore= 0;
+let computerChoice;
+let humanChoice;
+let humanScore = 0;
 let computerScore = 0;
 let round = 0;
 
+const display = document.querySelector(".score-display");
+const pick = document.querySelector(".picks");
+const end = document.querySelector(".end");
+const gameRound = document.querySelector(".round");
+const winLose = document.querySelector(".winLose");
+const rockBtn = document.querySelector(".rock");
+const paperBtn = document.querySelector(".paper");
+const scissorsBtn = document.querySelector(".scissors");
+scissorsBtn.addEventListener("click", () => {
+  playGame("scissors");
+});
+rockBtn.addEventListener("click", () => {
+  playGame("rock");
+});
+paperBtn.addEventListener("click", () => {
+  playGame("paper");
+});
+
 function getComputerChoice() {
-  randValue = Math.floor(( Math.random() * 3 ) + 1);
+  randValue = Math.floor(Math.random() * 3 + 1);
   let selection;
 
-  randValue === 1 ? selection = "rock"  : randValue === 2 ? selection = "paper" : selection = "scissors"
-return selection;
+  computerChoice =
+    randValue === 1
+      ? (selection = "rock")
+      : randValue === 2
+      ? (selection = "paper")
+      : (selection = "scissors");
+  return computerChoice;
 }
 
-function getHumanChoice() {
-    humanValue = prompt("Please pick Rock , Paper or Scissors");
-    console.log(humanValue.toLowerCase())
-    return humanValue.toLowerCase();
-    
-}
+function playRound(humanChoice) {
+  end.textContent = "";
+  computerChoice = getComputerChoice();
+  computerChoiceStr = `Computer choice is ${getComputerChoice()}`;
+  humanChoiceStr = `\nhuman choice is ${humanChoice} `;
 
+  pick.textContent = ` ${computerChoiceStr} , ${humanChoiceStr}`;
 
+  if (humanChoice === computerChoice) {
+    winLose.textContent = `A FREAKING DRAW`;
+  } else if (humanChoice === "rock" && computerChoice === "scissors") {
+    humanScore += 1;
+    winLose.textContent = `YOU WIN`;
+  } else if (humanChoice === "paper" && computerChoice === "rock") {
+    humanScore += 1;
+    winLose.textContent = " YOU WIN";
+  } else if (humanChoice === "scissors" && computerChoice === "paper") {
+    humanScore += 1;
+    winLose.textContent = " YOU WIN";
+  } else {
+    computerScore += 1;
+    winLose.textContent = " YOU LOSE";
+  }
 
-function playRound(humanChoice, computerChoice , humanScore , computerScore) {
-console.log(`Computer choice is ${computerChoice}`);
-console.log(`human choice is ${humanChoice}`);
+  round += 1;
+  gameRound.textContent = `ROUND ${round}`;
+  display.textContent = `SCORE: YOU: ${humanScore} VS COMPUTER: ${computerScore}`;
 
-if(humanChoice === computerChoice) {
-    console.log(`A freaking draw`)
-    console.log(`Your score :${humanScore}`);
-    console.log(`Computer score: ${computerScore}`);
-    }
+  if (round > 5) {
+    declareWinner();
+    winLose.textContent = "";
+    end.textContent = ` FINAL JUDGEMENT: ${declareWinner()}`;
+    gameRound.textContent = `ROUND 5`;
+    humanScore = 0;
+    computerScore = 0;
+    round = 0;
+  }
 
-else if (humanChoice === "rock" && computerChoice ==="scissors") {
-    console.log ( "You win!")
-    humanScore +=1;
-    console.log(`Your score :${humanScore}`);
-    console.log(`Computer score: ${computerScore}`);
-}
-
-else if ( humanChoice === "paper" && computerChoice ==="rock" ) {
-    console.log ( "You win!")
-        humanScore +=1;
-    console.log(`Your score :${humanScore}`);
-    console.log(`Computer score: ${computerScore}`);
-}
-
-else if ( humanChoice === "scissors" && computerChoice ==="paper" ) {
-    console.log ( "You win!")
-        humanScore +=1;
-    console.log(`Your score :${humanScore}`);
-    console.log(`Computer score: ${computerScore}`);
-     }
-
-    
-
-else {console.log("You lose !")
-    computerScore +=1;
-    console.log(`Your score :${humanScore}`);
-    console.log(`Computer score: ${computerScore}`);
-
-}
-
-return { humanScore, computerScore };
-
+  return { humanScore, computerScore, round };
 }
 
 function declareWinner() {
-    if (humanScore > computerScore) {
-        console.log ("Congratulations you win !!!")
-    }
-
-    else if (humanScore < computerScore) {
-        console.log ("Sorry you lose !!!")
-    }
-
-    else {console.log("A freaking draw !!!")}
+  if (humanScore > computerScore) {
+    return "Congratulations you win !!!";
+  } else if (humanScore < computerScore) {
+    return "Sorry you lose !!!";
+  } else {
+    return "A freaking draw !!!";
+  }
 }
 
-function playGame() {
-const humanChoice = getHumanChoice();
-const computerChoice = getComputerChoice();
+function playGame(humanChoice) {
+  humanChoice = humanChoice;
+  computerChoice = getComputerChoice();
 
-const result = playRound(humanChoice , computerChoice , humanScore , computerScore)
-humanScore = result.humanScore;
-computerScore = result.computerScore;
-
-}
-
-
-
-while (round < 5) {
-playGame()
-
-round +=1
-console.log(round)
-}
-
-if (round = 5 ) {
-    declareWinner()
+  const result = playRound(humanChoice, computerChoice);
+  humanScore = result.humanScore;
+  computerScore = result.computerScore;
 }
